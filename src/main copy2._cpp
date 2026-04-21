@@ -1,0 +1,70 @@
+#include <ezLED.h>   // ezLED library
+#include <zalcLED.cpp> // ezLED library
+
+#define dataPin 6  // pin 74hc656 DS
+#define latchPin 5 // pin 74hc656 ST_CP
+#define clockPin 4 // pin 74hc656 SH_CP
+#define btnBluePin 11
+#define btnYellowPin 10
+
+ZalcLED led74hc565;
+
+ezLED ledBlue(12);   // create a LED object that attach to pin 12
+ezLED ledYellow(13); // create a LED object that attach to pin 13
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(btnBluePin, INPUT);
+  pinMode(btnYellowPin, INPUT);
+
+  led74hc565.init(dataPin, latchPin, clockPin);
+  ledYellow.blink(250, 750);
+}
+
+void loop()
+{
+  ledBlue.loop();
+  ledYellow.loop();
+  led74hc565.loop();
+
+  int buttonBlueState = digitalRead(btnBluePin);
+  int buttonYellowState = digitalRead(btnYellowPin);
+
+  if (buttonBlueState == HIGH)
+  {
+    ledBlue.turnON(); // turn on immediately
+    // ledBlue.turnON(1000); // turn on after 1 second
+    led74hc565.off(1);
+    led74hc565.off(2);
+    led74hc565.blink1(3);
+    led74hc565.blink1(4);
+  }
+  else
+  {
+    ledBlue.turnOFF(); // turn off immediately
+    led74hc565.on(1);
+    led74hc565.on(2);
+    led74hc565.on(3);
+    led74hc565.on(4);
+
+  }
+
+  if (buttonYellowState == HIGH)
+  {
+    if (ledYellow.getState() == LED_IDLE)
+    {
+      Serial.println("BLINKING");
+      ledYellow.blink(250, 750); // turn on immediately
+    }
+  }
+  else
+  {
+    if (ledYellow.getState() == LED_BLINKING)
+    {
+      Serial.println("BLINK ENDED"); // ledYellow.cancel();       // turn off immediately
+      ledYellow.cancel();
+    }
+    // ledYellow.turnOFF(1000); // turn off after 1 second
+  }
+}
