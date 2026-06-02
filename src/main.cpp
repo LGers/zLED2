@@ -165,20 +165,26 @@ public:
     {
       newLeds <<= 1;
 
-      switch (ledsState[i])
+      //TODO: 
+      //switch (ledsState[i])
+      switch (ledsState2[i].state)
       {
       case LED_MODE_ON:
         newLeds = newLeds | 0b00000001;
         break;
 
       case LED_MODE_TOGGLE:
-        if (ledsState[i] == LED_MODE_ON)
+        // if (ledsState[i] == LED_MODE_ON)
+        if (ledsState2[i].state == LED_MODE_ON)
         {
-          ledsState[i] = LED_MODE_OFF;
+          ledsState[i] = LED_MODE_OFF; // TODO: del it
+          ledsState2[i].state = LED_MODE_OFF;
         }
-        else if (ledsState[i] == LED_MODE_OFF)
+        // else if (ledsState[i] == LED_MODE_OFF)
+        else if (ledsState2[i].state == LED_MODE_OFF)
         {
-          ledsState[i] = LED_MODE_ON;
+          ledsState[i] = LED_MODE_ON; // TODO: del it
+          ledsState2[i].state = LED_MODE_ON;
           // newLeds |= 1;
           newLeds = newLeds | 0b00000001;
         }
