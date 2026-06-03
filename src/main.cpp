@@ -16,10 +16,17 @@ enum ledstate_t
   kBreathOut
 };
 
-enum z_ledstate_t
+// enum z_ledstate_t
+// {
+//   LED_OFF = 0,
+//   LED_ON = 1,
+// };
+
+int defaultBlinkDelay_0 = 300;
+
+enum z_ledmode_t
 {
-  LED_MODE_OFF = 0,
-  LED_MODE_ON = 1,
+  LED_MODE_ON_OFF = 0,
   LED_MODE_TOGGLE = 2,
   LED_MODE_FADE = 3,
   LED_MODE_BLINK_FOREVER = 4,
@@ -33,35 +40,38 @@ struct ledState_struct
   // uint8_t count;
   uint8_t blinkOnTime = 0;
   uint8_t blinkOffTime = 0;
-  uint8_t blinkTimePeriod = 0;
+  // uint8_t blinkTimePeriod = defaultBlinkDelay_0;
+  uint16_t blinkTimePeriod = 300;
   uint8_t blinkNumberOfTimes = 0;
   uint32_t prevMillis = 0;
-  z_ledstate_t state = LED_MODE_OFF;
+  bool isLedOn = false;
+  z_ledmode_t mode = LED_MODE_ON_OFF;
+  // z_ledstate_t state = LED_OFF;
 };
 
 class Foo
 {
 private:
   uint8_t m_led_counts = 8;
-  uint8_t m_pin;
-  uint8_t m_lo;
-  uint8_t m_hi;
-  uint8_t m_count;
-  uint32_t m_start;
-  uint32_t m_interval = 300;
-  ledstate_t m_state;
+  // uint8_t m_pin;
+  // uint8_t m_lo;
+  // uint8_t m_hi;
+  // uint8_t m_count;
+  // uint32_t m_start;
+  // uint32_t m_interval = 300;
+  // ledstate_t m_state;
   uint32_t ledsPinLastState;                       // B010001110 - on/off
   uint32_t ledsPinCurrentState = ledsPinLastState; // B010001110 - on/off
   // z_ledstate_t ledsState[m_led_counts] {LED_MODE_OFF};
-  z_ledstate_t ledsState[8]{};
+  // z_ledstate_t ledsState[8]{};
 
   ledState_struct ledsState2[8];
-
 
   uint32_t currentMillis = millis();
   uint32_t prevMillis = 0;
 
-  int defaultBlinkDelay = 300;
+  // int defaultBlinkDelay = 300;
+  uint16_t blinkDelay = 300;
 
   // for (int i =0; i < sizeof(ledsState); i++) {
   //   ledsState[i] = LED_MODE_OFF;
@@ -73,8 +83,10 @@ public:
   int clockPin;
   int leds = B00000000;
 
-  Foo() {
-    for (int i = 0; i < 8; i++) {
+  Foo()
+  {
+    for (int i = 0; i < 8; i++)
+    {
       ledsState2[i].id = i;
     }
   }
@@ -96,10 +108,12 @@ public:
 
   void onAll()
   { // on all leds
-    for (int i = 0; i < sizeof(ledsState); i++)
+    // for (int i = 0; i < sizeof(ledsState); i++)
+    for (int i = 0; i < sizeof(ledsState2); i++)
     {
-      ledsState[i] = LED_MODE_ON;
-      ledsState2[i].state = LED_MODE_ON;
+      // ledsState[i] = LED_ON;
+      // ledsState2[i].state = LED_ON;
+      ledsState2[i].mode = LED_MODE_ON_OFF;
     }
 
     // digitalWrite(latchPin, LOW);                                        // ставим LOW на "защёлку"
@@ -109,31 +123,44 @@ public:
 
   void offAll()
   { // off all leds
-    for (int i = 0; i < sizeof(ledsState); i++)
+    // for (int i = 0; i < sizeof(ledsState); i++)
+    for (int i = 0; i < sizeof(ledsState2); i++)
     {
-      ledsState[i] = LED_MODE_OFF;
-      ledsState2[i].state = LED_MODE_OFF;
+      // ledsState[i] = LED_OFF;
+      // ledsState2[i].state = LED_OFF;
+      ledsState2[i].isLedOn = false;
     }
   }
 
   void on(int ledNumber)
   { // on led with ledNumber
     onBit(ledNumber);
-    ledsState[ledNumber] = LED_MODE_ON;
-    ledsState2[ledNumber].state = LED_MODE_ON;
+    // ledsState[ledNumber] = LED_ON;
+    // ledsState2[ledNumber].state = LED_ON;
+    ledsState2[ledNumber].isLedOn = true;
+    ledsState2[ledNumber].mode = LED_MODE_ON_OFF;
   }
 
   void off(int ledNumber)
   { // off led with ledNumber
     offBit(ledNumber);
-    ledsState[ledNumber] = LED_MODE_OFF;
-    ledsState2[ledNumber].state = LED_MODE_OFF;
+    // ledsState[ledNumber] = LED_OFF;
+    // ledsState2[ledNumber].state = LED_OFF;
+    ledsState2[ledNumber].isLedOn = false;
+    ledsState2[ledNumber].mode = LED_MODE_ON_OFF;
   }
 
   void blink1(int ledNumber)
   { // blink ledNumber on/off 300/300ms
-    ledsState[ledNumber] = LED_MODE_BLINK_FOREVER;
-    ledsState2[ledNumber].state = LED_MODE_BLINK_FOREVER;
+    // ledsState[ledNumber] = LED_MODE_BLINK_FOREVER;
+    ledsState2[ledNumber].mode = LED_MODE_BLINK_FOREVER;
+  }
+
+  // TODO: custom blink time - now not working
+  void blink1(int ledNumber, uint16_t ledBlinkDelay)
+  {
+    ledsState2[ledNumber].mode = LED_MODE_BLINK_FOREVER;
+    ledsState2[ledNumber].blinkTimePeriod = ledBlinkDelay;
   }
 
   void Foo::toggle()
@@ -142,13 +169,14 @@ public:
 
   unsigned int getPinState(int pinNumber)
   {
-    return ledsState[pinNumber];
+    // return ledsState[pinNumber];
+    return ledsState2[pinNumber].isLedOn;
   }
 
   void loop()
   {
     // int blinkDelay = 1500;          // ms blink delay
-    int blinkDelay = defaultBlinkDelay; // ms blink delay
+    // int blinkDelay = defaultBlinkDelay_0; // ms blink delay
     currentMillis = millis();
     if (ledsPinCurrentState != ledsPinLastState)
     {
@@ -159,41 +187,42 @@ public:
     }
 
     int newLeds = 0;
-    int length = sizeof(ledsState) / sizeof(ledsState[0]);
+    // int length = sizeof(ledsState) / sizeof(ledsState[0]);
+    int length = sizeof(ledsState2) / sizeof(ledsState2[0]);
 
     for (int i = 0; i < length; i++)
     {
       newLeds <<= 1;
 
-      //TODO: 
-      //switch (ledsState[i])
-      switch (ledsState2[i].state)
+      // TODO:
+      // switch (ledsState[i])
+      switch (ledsState2[i].mode)
       {
-      case LED_MODE_ON:
+      case LED_MODE_ON_OFF:
         newLeds = newLeds | 0b00000001;
+        // ledsState2[i].blinkTimePeriod = blinkDelay;
         break;
 
-      case LED_MODE_TOGGLE:
-        // if (ledsState[i] == LED_MODE_ON)
-        if (ledsState2[i].state == LED_MODE_ON)
-        {
-          ledsState[i] = LED_MODE_OFF; // TODO: del it
-          ledsState2[i].state = LED_MODE_OFF;
-        }
-        // else if (ledsState[i] == LED_MODE_OFF)
-        else if (ledsState2[i].state == LED_MODE_OFF)
-        {
-          ledsState[i] = LED_MODE_ON; // TODO: del it
-          ledsState2[i].state = LED_MODE_ON;
-          // newLeds |= 1;
-          newLeds = newLeds | 0b00000001;
-        }
-        break;
+        // case LED_MODE_TOGGLE:
+        //   // if (ledsState[i] == LED_MODE_ON)
+        //   if (ledsState2[i].state == LED_ON)
+        //   {
+        //     ledsState[i] = LED_OFF; // TODO: del it
+        //     ledsState2[i].state = LED_OFF;
+        //   }
+        //   // else if (ledsState[i] == LED_MODE_OFF)
+        //   else if (ledsState2[i].state == LED_OFF)
+        //   {
+        //     ledsState[i] = LED_ON; // TODO: del it
+        //     ledsState2[i].state = LED_ON;
+        //     // newLeds |= 1;
+        //     newLeds = newLeds | 0b00000001;
+        //   }
+        //   break;
 
       case LED_MODE_BLINK_FOREVER:
-        blinkDelay = defaultBlinkDelay; // custom blink time!!!!!!!!!!!!!!!!!!!!!!!!!
-        // if ((millis() - prevMillis) >= blinkDelay) {
-        if ((currentMillis - prevMillis) >= blinkDelay)
+        uint32_t blinkDelay3 = ledsState2[i].blinkTimePeriod; // TODO: custom blink time!!!!!!!!!!!!!!!!!!!!!!!!!
+        if ((currentMillis - prevMillis) >= blinkDelay3)
         {
           // Serial.println("Blink...............");
           if (isLedOn(i))
@@ -245,7 +274,11 @@ public:
 
     // if ((millis() - prevMillis) >= blinkDelay) {
     // prevMillis = millis();
+
+    // TODO: del it
+    // FIXME: custom blink time - change blink delay
     if ((currentMillis - prevMillis) >= blinkDelay)
+    // if ((currentMillis - prevMillis) >= ledsState2[i].blinkTimePeriod)
     {
       prevMillis = currentMillis;
     }
@@ -363,7 +396,8 @@ void loop()
     // foo.blink1(2);
     foo.off(2);
     foo.blink1(3);
-    foo.blink1(4);
+    // foo.blink1(4);
+    foo.blink1(4, 1000);
     // delay(300);
     // if (foo.getState(3) == LED_MODE_BLINK_FOREVER) {
     // Serial.print("STATE3 ON: ");
