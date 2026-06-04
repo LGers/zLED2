@@ -222,7 +222,8 @@ public:
 
       case LED_MODE_BLINK_FOREVER:
         uint32_t blinkDelay3 = ledsState2[i].blinkTimePeriod; // TODO: custom blink time!!!!!!!!!!!!!!!!!!!!!!!!!
-        if ((currentMillis - prevMillis) >= blinkDelay3)
+        // if ((currentMillis - prevMillis) >= blinkDelay3)
+        if ((currentMillis - ledsState2[i].prevMillis) >= ledsState2[i].blinkTimePeriod)
         {
           // Serial.println("Blink...............");
           if (isLedOn(i))
@@ -259,6 +260,12 @@ public:
         // newLeds &= 0;
         // Code block for no match (optional)
         break;
+      }
+
+      // if ((currentMillis - prevMillis) >= blinkDelay)
+      if ((currentMillis - ledsState2[i].prevMillis) >= ledsState2[i].blinkTimePeriod)
+      {
+        ledsState2[i].prevMillis = currentMillis;
       }
     }
 
@@ -397,7 +404,7 @@ void loop()
     foo.off(2);
     foo.blink1(3);
     // foo.blink1(4);
-    foo.blink1(4, 1000);
+    foo.blink1(4, 100);
     // delay(300);
     // if (foo.getState(3) == LED_MODE_BLINK_FOREVER) {
     // Serial.print("STATE3 ON: ");
