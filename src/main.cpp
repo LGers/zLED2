@@ -354,7 +354,7 @@ private:
 
 #include <ezLED.h> // ezLED library
 #include <MyClass.h>
-#include <ZalcLED.h>
+#include <zalcLED.h>
 
 #define dataPin 6  // пин подключен к входу DS
 #define latchPin 5 // пин подключен к входу ST_CP
@@ -363,7 +363,7 @@ private:
 #define btnYellowPin 10
 
 // Foo foo;
-ZalcLED foo;
+zalcLED foo;
 
 ezLED ledBlue(12);   // create a LED object that attach to pin 12
 ezLED ledYellow(13); // create a LED object that attach to pin 13
