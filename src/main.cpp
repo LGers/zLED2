@@ -353,6 +353,7 @@ private:
 };
 
 #include <ezLED.h> // ezLED library
+#include <MyClass.h>
 
 #define dataPin 6  // пин подключен к входу DS
 #define latchPin 5 // пин подключен к входу ST_CP
@@ -364,6 +365,8 @@ Foo foo;
 
 ezLED ledBlue(12);   // create a LED object that attach to pin 12
 ezLED ledYellow(13); // create a LED object that attach to pin 13
+
+MyClass obj(2);
 
 void setup()
 {
@@ -437,7 +440,9 @@ void loop()
   {
     if (ledYellow.getState() == LED_BLINKING)
     {
-      Serial.println("BLINK ENDED2"); // ledYellow.cancel();       // turn off immediately
+      Serial.println("BLINK ENDED2");   // ledYellow.cancel();       // turn off immediately
+      Serial.print("MyClass multi = "); // ledYellow.cancel();       // turn off immediately
+      Serial.println(obj.multi2());     // ledYellow.cancel();       // turn off immediately
       ledYellow.cancel();
     }
     // led.turnOFF(1000); // turn off after 1 second
