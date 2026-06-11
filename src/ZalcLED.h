@@ -1,16 +1,19 @@
+#pragma once
 #include <Arduino.h> //TODO: pragma once
 
-#ifndef ZALCLED_H
-#define ZALCLED_H
+#ifndef ZalcLED_H
+#define ZalcLED_H
 
-class ZalcLED {
+class ZalcLED
+{
 private:
     int data;
 
 public:
-    ZalcLED(int val); // Конструктор
-    void printData(); // Метод вывода
-    int multi2(); // Метод вывода
+    // ZalcLED(int val); // Конструктор
+    ZalcLED(); // Конструктор
+    // void printData(); // Метод вывода
+    // int multi2(); // Метод вывода
 
     void init(int dataPin1, int latchPin1, int clockPin1);
     void onAll();
@@ -25,7 +28,6 @@ public:
     unsigned int getPinState(int pinNumber);
 
     void loop();
-
 };
 
 #endif

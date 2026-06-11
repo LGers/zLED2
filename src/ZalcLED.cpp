@@ -1,4 +1,6 @@
+#pragma once
 #include <Arduino.h> //TODO: pragma once
+#include "ZalcLED.h"
 
 enum ledstate_t
 {
@@ -11,7 +13,7 @@ enum ledstate_t
     kBreathOut
 };
 
-int defaultBlinkDelay_0 = 300;
+// int defaultBlinkDelay_0 = 300;
 
 enum z_ledmode_t
 {

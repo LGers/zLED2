@@ -22,7 +22,7 @@ enum ledstate_t
 //   LED_ON = 1,
 // };
 
-int defaultBlinkDelay_0 = 300;
+// int defaultBlinkDelay_01 = 300;
 
 enum z_ledmode_t
 {
@@ -354,6 +354,7 @@ private:
 
 #include <ezLED.h> // ezLED library
 #include <MyClass.h>
+#include <ZalcLED.h>
 
 #define dataPin 6  // пин подключен к входу DS
 #define latchPin 5 // пин подключен к входу ST_CP
@@ -361,7 +362,8 @@ private:
 #define btnBluePin 11
 #define btnYellowPin 10
 
-Foo foo;
+// Foo foo;
+ZalcLED foo;
 
 ezLED ledBlue(12);   // create a LED object that attach to pin 12
 ezLED ledYellow(13); // create a LED object that attach to pin 13
@@ -374,7 +376,7 @@ void setup()
   pinMode(btnBluePin, INPUT);
   pinMode(btnYellowPin, INPUT);
 
-  foo.var = 123; // обращение к переменной объекта foo
+  // foo.var = 123; // обращение к переменной объекта foo
   // foo.func();     // вызов метода объекта foo
   foo.init(dataPin, latchPin, clockPin);
 
