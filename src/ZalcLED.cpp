@@ -98,6 +98,13 @@ void zalcLED::blink1(int ledNumber, uint16_t ledBlinkDelay)
     ledsState2[ledNumber - 1].blinkTimePeriod = ledBlinkDelay;
 };
 
+void zalcLED::blinkTimes(int ledNumber, uint16_t ledBlinkDelay, uint8_t times)
+{
+    ledsState2[ledNumber - 1].mode = LED_MODE_BLINK_NUM_TIME;
+    ledsState2[ledNumber - 1].blinkTimePeriod = ledBlinkDelay;
+    ledsState2[ledNumber - 1].blinkNumberOfTimes = times;
+};
+
 void zalcLED::toggle() {
 
 };
@@ -164,6 +171,9 @@ void zalcLED::loop()
                     newLeds &= 0b11111110;
                 }
             }
+            break;
+
+        case LED_MODE_BLINK_NUM_TIME:
             break;
 
         default: // LED_MODE_OFF // newLeds |= 0;

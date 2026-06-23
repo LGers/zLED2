@@ -60,6 +60,7 @@ public:
 
     void blink1(int ledNumber);
     void blink1(int ledNumber, uint16_t ledBlinkDelay);
+    void blinkTimes(int ledNumber, uint16_t ledBlinkDelay, uint8_t times);
     void toggle();
 
     unsigned int getPinState(int pinNumber);
