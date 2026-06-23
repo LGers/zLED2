@@ -74,28 +74,28 @@ void zalcLED::offAll()
 
 void zalcLED::on(int ledNumber)
 {
-    onBit(ledNumber);
-    ledsState2[ledNumber].isLedOn = true;
-    ledsState2[ledNumber].mode = LED_MODE_ON_OFF;
+    onBit(ledNumber - 1);
+    ledsState2[ledNumber - 1].isLedOn = true;
+    ledsState2[ledNumber - 1].mode = LED_MODE_ON_OFF;
 };
 
 void zalcLED::off(int ledNumber)
 {
-    offBit(ledNumber);
-    ledsState2[ledNumber].isLedOn = false;
-    ledsState2[ledNumber].mode = LED_MODE_ON_OFF;
+    offBit(ledNumber - 1);
+    ledsState2[ledNumber - 1].isLedOn = false;
+    ledsState2[ledNumber - 1].mode = LED_MODE_ON_OFF;
 };
 
 void zalcLED::blink1(int ledNumber)
 {
-    ledsState2[ledNumber].mode = LED_MODE_BLINK_FOREVER;
+    ledsState2[ledNumber - 1].mode = LED_MODE_BLINK_FOREVER;
 };
 
 // TODO: custom blink time - now not working
 void zalcLED::blink1(int ledNumber, uint16_t ledBlinkDelay)
 {
-    ledsState2[ledNumber].mode = LED_MODE_BLINK_FOREVER;
-    ledsState2[ledNumber].blinkTimePeriod = ledBlinkDelay;
+    ledsState2[ledNumber - 1].mode = LED_MODE_BLINK_FOREVER;
+    ledsState2[ledNumber - 1].blinkTimePeriod = ledBlinkDelay;
 };
 
 void zalcLED::toggle() {
@@ -104,7 +104,7 @@ void zalcLED::toggle() {
 
 unsigned int zalcLED::getPinState(int pinNumber)
 {
-    return ledsState2[pinNumber].isLedOn;
+    return ledsState2[pinNumber - 1].isLedOn;
 };
 
 void zalcLED::loop()
@@ -128,7 +128,15 @@ void zalcLED::loop()
         switch (ledsState2[i].mode)
         {
         case LED_MODE_ON_OFF:
-            newLeds = newLeds | 0b00000001;
+            // newLeds = newLeds | 0b00000001;
+            if (ledsState2[i].isLedOn)
+            {
+                newLeds = newLeds | 0b00000001;
+            }
+            else
+            {
+                newLeds &= 0b11111110;
+            }
             break;
 
         case LED_MODE_BLINK_FOREVER:
