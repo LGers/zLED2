@@ -193,6 +193,7 @@ void zalcLED::loop()
                     newLeds = newLeds | 0b00000001;
                     ledsState2[i].isLedOn = true;
                 }
+
                 if (ledsState2[i].blinkNumberOfTimes > 0)
                 {
                     ledsState2[i].blinkNumberOfTimes -= 1; // TODO: decrese -1
@@ -301,4 +302,17 @@ void zalcLED::printBits(uint32_t n)
         Serial.print(bit);
     }
     Serial.println(" :END");
+}
+
+void zalcLED::offBit(uint32_t bitNumber)
+{
+    changetBit = (1 << (m_led_counts - 1 - bitNumber)); // Установили bitNumber-й (3) бит: 00001000 (8)
+    leds = leds & ~changetBit;
+    ledsPinCurrentState = ledsPinCurrentState & ~changetBit;
+    // leds ^= (1 << 7 - bitNumber);  // Установили bitNumber-й бит: 00001000 (8)
+}
+
+void zalcLED::fn(uint32_t ledNumber)
+{
+    
 }
