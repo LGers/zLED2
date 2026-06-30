@@ -148,15 +148,60 @@ void zalcLED::loop()
 
         case LED_MODE_BLINK_FOREVER:
             // uint32_t blinkDelay3 = ledsState2[i].blinkTimePeriod; // TODO: custom blink time!!!!!!!!!!!!!!!!!!!!!!!!!
+            // TODO: toggle func START
             if ((currentMillis - ledsState2[i].prevMillis) >= ledsState2[i].blinkTimePeriod)
             {
-                if (isLedOn(i))
+                if (ledsState2[i].isLedOn)
                 {
                     newLeds &= 0b11111110;
+                    ledsState2[i].isLedOn = false;
                 }
                 else
                 {
                     newLeds = newLeds | 0b00000001;
+                    ledsState2[i].isLedOn = true;
+                }
+            }
+            else
+            {
+                // save previous state of Led
+                if (ledsState2[i].isLedOn)
+                {
+                    newLeds = newLeds | 0b00000001;
+                    ledsState2[i].isLedOn = true;
+                }
+                else
+                {
+                    newLeds &= 0b11111110;
+                    ledsState2[i].isLedOn = false;
+                }
+            }
+            // TODO: toggle func END
+            break;
+
+        case LED_MODE_BLINK_NUM_TIME:
+            // TODO: toggle func START
+            if ((currentMillis - ledsState2[i].prevMillis) >= ledsState2[i].blinkTimePeriod)
+            {
+                if (ledsState2[i].isLedOn)
+                {
+                    newLeds &= 0b11111110;
+                    ledsState2[i].isLedOn = false;
+                }
+                else
+                {
+                    newLeds = newLeds | 0b00000001;
+                    ledsState2[i].isLedOn = true;
+                }
+                if (ledsState2[i].blinkNumberOfTimes > 0)
+                {
+                    ledsState2[i].blinkNumberOfTimes -= 1; // TODO: decrese -1
+                }
+                else // switch LED to default state
+                {
+                    ledsState2[i].blinkTimePeriod = 0;
+                    ledsState2[i].isLedOn = false;
+                    ledsState2[i].mode = LED_MODE_ON_OFF;
                 }
             }
             else
@@ -165,15 +210,26 @@ void zalcLED::loop()
                 if (isLedOn(i))
                 {
                     newLeds = newLeds | 0b00000001;
+                    ledsState2[i].isLedOn = false;
                 }
                 else
                 {
                     newLeds &= 0b11111110;
+                    ledsState2[i].isLedOn = true;
                 }
             }
-            break;
+            // TODO: toggle func END
+            if (ledsState2[i].isLedOn)
+            {
 
-        case LED_MODE_BLINK_NUM_TIME:
+                if (ledsState2[i].blinkNumberOfTimes > 0)
+                {
+                    ledsState2[i].blinkNumberOfTimes -= 1; // TODO: decrese -1
+                }
+                else
+                {
+                }
+            }
             break;
 
         default: // LED_MODE_OFF // newLeds |= 0;
