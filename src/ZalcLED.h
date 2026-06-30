@@ -42,6 +42,8 @@ private:
     char getBits(uint32_t n);
     void printBits(uint32_t n);
     void fn(uint32_t n);
+    void intFn(uint32_t n);
+    void switchToDefaultLedState(uint32_t n);
 
 public:
     int dataPin;

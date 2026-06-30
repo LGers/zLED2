@@ -34,6 +34,8 @@ struct ledState_struct
     z_ledmode_t mode = LED_MODE_ON_OFF;
 };
 
+ledState_struct defaultLedState;
+
 ledState_struct ledsState2[8];
 
 zalcLED::zalcLED()
@@ -114,6 +116,7 @@ unsigned int zalcLED::getPinState(int pinNumber)
     return ledsState2[pinNumber - 1].isLedOn;
 };
 
+//LOOP----------------------------------
 void zalcLED::loop()
 {
     currentMillis = millis();
@@ -200,9 +203,10 @@ void zalcLED::loop()
                 }
                 else // switch LED to default state
                 {
-                    ledsState2[i].blinkTimePeriod = 0;
-                    ledsState2[i].isLedOn = false;
-                    ledsState2[i].mode = LED_MODE_ON_OFF;
+                    switchToDefaultLedState(i);
+                    // ledsState2[i].blinkTimePeriod = 0;
+                    // ledsState2[i].isLedOn = false;
+                    // ledsState2[i].mode = LED_MODE_ON_OFF;
                 }
             }
             else
@@ -234,6 +238,7 @@ void zalcLED::loop()
             break;
 
         default: // LED_MODE_OFF // newLeds |= 0;
+            switchToDefaultLedState(i);
             break;
         }
 
@@ -304,15 +309,25 @@ void zalcLED::printBits(uint32_t n)
     Serial.println(" :END");
 }
 
-void zalcLED::offBit(uint32_t bitNumber)
-{
-    changetBit = (1 << (m_led_counts - 1 - bitNumber)); // Установили bitNumber-й (3) бит: 00001000 (8)
-    leds = leds & ~changetBit;
-    ledsPinCurrentState = ledsPinCurrentState & ~changetBit;
-    // leds ^= (1 << 7 - bitNumber);  // Установили bitNumber-й бит: 00001000 (8)
-}
+// void zalcLED::offBit(uint32_t bitNumber)
+// {
+//     changetBit = (1 << (m_led_counts - 1 - bitNumber)); // Установили bitNumber-й (3) бит: 00001000 (8)
+//     leds = leds & ~changetBit;
+//     ledsPinCurrentState = ledsPinCurrentState & ~changetBit;
+//     // leds ^= (1 << 7 - bitNumber);  // Установили bitNumber-й бит: 00001000 (8)
+// }
 
 void zalcLED::fn(uint32_t ledNumber)
 {
     
+}
+
+void zalcLED::intFn(uint32_t ledNumber)
+{
+    
+}
+
+void zalcLED::switchToDefaultLedState(uint32_t ledNumber)
+{
+    ledsState2[ledNumber] = defaultLedState;
 }
