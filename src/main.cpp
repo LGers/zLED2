@@ -58,6 +58,8 @@ void loop()
     foo.blink1(3);
     // foo.blink1(4);
     foo.blink1(4, 100);
+    foo.blinkTimes(5, 300, 5);
+    foo.blink1(6, 300);
     // delay(300);
     // if (foo.getState(3) == LED_MODE_BLINK_FOREVER) {
     // Serial.print("STATE3 ON: ");

@@ -116,7 +116,7 @@ unsigned int zalcLED::getPinState(int pinNumber)
     return ledsState2[pinNumber - 1].isLedOn;
 };
 
-//LOOP----------------------------------
+// LOOP----------------------------------
 void zalcLED::loop()
 {
     currentMillis = millis();
@@ -208,6 +208,7 @@ void zalcLED::loop()
                     // ledsState2[i].isLedOn = false;
                     // ledsState2[i].mode = LED_MODE_ON_OFF;
                 }
+
             }
             else
             {
@@ -215,26 +216,15 @@ void zalcLED::loop()
                 if (isLedOn(i))
                 {
                     newLeds = newLeds | 0b00000001;
-                    ledsState2[i].isLedOn = false;
+                    ledsState2[i].isLedOn = true;
                 }
                 else
                 {
                     newLeds &= 0b11111110;
-                    ledsState2[i].isLedOn = true;
+                    ledsState2[i].isLedOn = false;
                 }
             }
             // TODO: toggle func END
-            if (ledsState2[i].isLedOn)
-            {
-
-                if (ledsState2[i].blinkNumberOfTimes > 0)
-                {
-                    ledsState2[i].blinkNumberOfTimes -= 1; // TODO: decrese -1
-                }
-                else
-                {
-                }
-            }
             break;
 
         default: // LED_MODE_OFF // newLeds |= 0;
@@ -319,12 +309,10 @@ void zalcLED::printBits(uint32_t n)
 
 void zalcLED::fn(uint32_t ledNumber)
 {
-    
 }
 
 void zalcLED::intFn(uint32_t ledNumber)
 {
-    
 }
 
 void zalcLED::switchToDefaultLedState(uint32_t ledNumber)
