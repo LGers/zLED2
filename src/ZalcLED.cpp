@@ -40,6 +40,7 @@ ledState_struct ledsState2[8];
 
 zalcLED::zalcLED()
 {
+    //TODO: custom num of LEDs
     for (int i = 0; i < 8; i++)
     {
         ledsState2[i].id = i;
@@ -93,7 +94,6 @@ void zalcLED::blink1(int ledNumber)
     ledsState2[ledNumber - 1].mode = LED_MODE_BLINK_FOREVER;
 };
 
-// TODO: custom blink time - now not working
 void zalcLED::blink1(int ledNumber, uint16_t ledBlinkDelay)
 {
     ledsState2[ledNumber - 1].mode = LED_MODE_BLINK_FOREVER;
@@ -134,101 +134,38 @@ void zalcLED::loop()
     {
         newLeds <<= 1;
 
-        // TODO:
         switch (ledsState2[i].mode)
         {
         case LED_MODE_ON_OFF:
-            // newLeds = newLeds | 0b00000001;
-            if (ledsState2[i].isLedOn)
-            {
-                // newLeds = newLeds | 0b00000001;
-            }
-            else
-            {
-                // newLeds &= 0b11111110;
-            }
             break;
 
         case LED_MODE_BLINK_FOREVER:
-            // uint32_t blinkDelay3 = ledsState2[i].blinkTimePeriod; // TODO: custom blink time!!!!!!!!!!!!!!!!!!!!!!!!!
-            // TODO: toggle func START
             if ((currentMillis - ledsState2[i].prevMillis) >= ledsState2[i].blinkTimePeriod)
             {
                 ledsState2[i].isLedOn = !ledsState2[i].isLedOn;
-                // if (ledsState2[i].isLedOn)
-                // {
-                //     // newLeds &= 0b11111110;
-                //     ledsState2[i].isLedOn = false;
-                // }
-                // else
-                // {
-                //     // newLeds = newLeds | 0b00000001;
-                //     ledsState2[i].isLedOn = true;
-                // }
             }
-            else
-            {
-                // save previous state of Led
-                // if (ledsState2[i].isLedOn)
-                // {
-                //     // newLeds = newLeds | 0b00000001;
-                //     ledsState2[i].isLedOn = true;
-                // }
-                // else
-                // {
-                //     // newLeds &= 0b11111110;
-                //     ledsState2[i].isLedOn = false;
-                // }
-            }
-            // TODO: toggle func END
             break;
 
         case LED_MODE_BLINK_NUM_TIME:
-            // TODO: toggle func START
             if ((currentMillis - ledsState2[i].prevMillis) >= ledsState2[i].blinkTimePeriod)
             {
                 ledsState2[i].isLedOn = !ledsState2[i].isLedOn;
-                // if (ledsState2[i].isLedOn)
-                // {
-                //     // newLeds &= 0b11111110;
-                //     ledsState2[i].isLedOn = false;
-                // }
-                // else
-                // {
-                //     // newLeds = newLeds | 0b00000001;
-                //     ledsState2[i].isLedOn = true;
-                // }
 
                 if (ledsState2[i].blinkNumberOfTimes > 0)
                 {
-                    ledsState2[i].blinkNumberOfTimes -= 1; // TODO: decrese -1
+                    if (ledsState2[i].isLedOn)
+                    {
+                        ledsState2[i].blinkNumberOfTimes -= 1;
+                    }
                 }
                 else // switch LED to default state
                 {
                     switchToDefaultLedState(i);
-                    // ledsState2[i].blinkTimePeriod = 0;
-                    // ledsState2[i].isLedOn = false;
-                    // ledsState2[i].mode = LED_MODE_ON_OFF;
                 }
             }
-            else
-            {
-                // save previous state of Led
-                // if (isLedOn(i))
-                // {
-                //     // newLeds = newLeds | 0b00000001;
-                //     ledsState2[i].isLedOn = true;
-                // }
-                // else
-                // {
-                //     // newLeds &= 0b11111110;
-                //     ledsState2[i].isLedOn = false;
-                // }
-            }
-            // TODO: toggle func END
             break;
 
-        default: // LED_MODE_OFF // newLeds |= 0;
+        default: // LED_MODE_OFF
             switchToDefaultLedState(i);
             break;
         }
@@ -307,22 +244,6 @@ void zalcLED::printBits(uint32_t n)
         Serial.print(bit);
     }
     Serial.println(" :END");
-}
-
-// void zalcLED::offBit(uint32_t bitNumber)
-// {
-//     changetBit = (1 << (m_led_counts - 1 - bitNumber)); // Установили bitNumber-й (3) бит: 00001000 (8)
-//     leds = leds & ~changetBit;
-//     ledsPinCurrentState = ledsPinCurrentState & ~changetBit;
-//     // leds ^= (1 << 7 - bitNumber);  // Установили bitNumber-й бит: 00001000 (8)
-// }
-
-void zalcLED::fn(uint32_t ledNumber)
-{
-}
-
-void zalcLED::intFn(uint32_t ledNumber)
-{
 }
 
 void zalcLED::switchToDefaultLedState(uint32_t ledNumber)

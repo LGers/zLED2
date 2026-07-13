@@ -51,16 +51,13 @@ void loop()
   if (buttonBlueState == HIGH)
   {
     ledBlue.turnON(); // turn on immediately
-    // led.turnON(1000); // turn on after 1 second
     foo.off(1);
-    // foo.blink1(2);
     foo.off(2);
     foo.blink1(3);
-    // foo.blink1(4);
     foo.blink1(4, 100);
     foo.blinkTimes(5, 300, 5);
     foo.blink1(6, 300);
-    // delay(300);
+    foo.blinkTimes(7, 120, 8);
     // if (foo.getState(3) == LED_MODE_BLINK_FOREVER) {
     // Serial.print("STATE3 ON: ");
     // Serial.println(foo.getPinState(3));
@@ -70,14 +67,10 @@ void loop()
   else
   {
     ledBlue.turnOFF(); // turn off immediately
-    // led.turnOFF(1000); // turn off after 1 second
     foo.on(1);
     foo.on(2);
     foo.on(3);
     foo.on(4);
-    // Serial.print("STATE3 OFF: ");
-    // Serial.println(foo.getPinState(3));
-    // delay(300);
   }
 
   if (buttonYellowState == HIGH)
